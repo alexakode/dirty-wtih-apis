@@ -11,6 +11,10 @@ const fetchPokemons = async () => {
   }
 };
 
+const buildPage = (pokemons) => {
+  pokemons.forEach();
+};
+
 const renderPage = () => {};
 
 renderPage();
