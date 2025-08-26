@@ -31,24 +31,12 @@ const buildPage = async (pokemons) => {
     pokemonCard.append(pokemonImg, pokemonNameEl);
     pokemonsContainer.append(pokemonCard);
   }
-};
-const nextPageButton = () => {
   const nextPageBtn = document.createElement("button");
   nextPageBtn.textContent = "Next Page";
   nextPageBtn.addEventListener("click", () => {
     page++;
     renderPage();
   });
-  return nextPageBtn;
-};
-const previousPageButton = () => {
-  const previousPageBtn = document.createElement("button");
-  previousPageBtn.textContent = "Previous Page";
-  previousPageBtn.addEventListener("click", () => {
-    page--;
-    renderPage();
-  });
-  return previousPageBtn;
 };
 const renderPage = async () => {
   const pokemons = await fetchPokemons(10, (page - 1) * 10);
