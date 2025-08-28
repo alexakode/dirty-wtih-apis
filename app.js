@@ -18,20 +18,6 @@ const fetchPokemon = async (url) => {
   const jsonBody = await response.json();
   return jsonBody;
 };
-const buildPage = async (pokemons) => {
-  for (let pokemon of pokemons) {
-    const pokemonData = await fetchPokemon(pokemon.url);
-    const pokemonCard = document.createElement("div");
-    const pokemonImg = document.createElement("img");
-    pokemonImg.src = pokemonData.sprites.front_default;
-    pokemonImg.height = 100;
-    pokemonImg.width = 100;
-    const pokemonNameEl = document.createElement("h1");
-    pokemonNameEl.textContent = pokemonData.name;
-    pokemonCard.append(pokemonImg, pokemonNameEl);
-    pokemonsContainer.append(pokemonCard);
-  }
-};
 const nextPageButton = () => {
   const nextPageBtn = document.createElement("button");
   nextPageBtn.textContent = "Next Page";
@@ -49,6 +35,20 @@ const previousPageButton = () => {
     renderPage();
   });
   return previousPageBtn;
+};
+const buildPage = async (pokemons) => {
+  for (let pokemon of pokemons) {
+    const pokemonData = await fetchPokemon(pokemon.url);
+    const pokemonCard = document.createElement("div");
+    const pokemonImg = document.createElement("img");
+    pokemonImg.src = pokemonData.sprites.front_default;
+    pokemonImg.height = 100;
+    pokemonImg.width = 100;
+    const pokemonNameEl = document.createElement("h1");
+    pokemonNameEl.textContent = pokemonData.name;
+    pokemonCard.append(pokemonImg, pokemonNameEl);
+    pokemonsContainer.append(pokemonCard);
+  }
 };
 const renderPage = async () => {
   pokemonsContainer.innerHTML = "";
