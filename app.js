@@ -50,6 +50,32 @@ const previousPageButton = () => {
   });
   return previousPageBtn;
 };
+const renderPokemonImage = (pokemonObj, shiny, sex, direction) => {
+  let imageSource = undefined;
+  // Determine the image source based on the shiny, sex, and direction
+  if (sex === "male") {
+    return shiny
+      ? direction === "front"
+        ? pokemonObj.sprites.front_shiny
+        : pokemonObj.sprites.back_shiny
+      : direction === "front"
+      ? pokemonObj.sprites.front_default
+      : pokemonObj.sprites.back_default;
+  } else {
+    return shiny
+      ? direction === "front"
+        ? pokemonObj.sprites.front_shiny
+        : pokemonObj.sprites.back_shiny
+      : direction === "front"
+      ? pokemonObj.sprites.front_default
+      : pokemonObj.sprites.back_default;
+  }
+  // const pokemonImg = document.createElement("img");
+  // pokemonImg.src = imageSource;
+  // pokemonImg.height = 100;
+  // pokemonImg.width = 100;
+  // return pokemonImg;
+};
 const buildPage = async (pokemons) => {
   for (let pokemon of pokemons) {
     const pokemonData = await fetchPokemon(pokemon.url);
@@ -64,20 +90,42 @@ const buildPage = async (pokemons) => {
     rotateDirection.textContent = "Rotate Pokemon";
     rotateDirection.addEventListener("click", () => {
       pokemon.direction = pokemon.direction === "front" ? "back" : "front";
-      pokemonImg.src =
-        pokemon.direction === "front"
-          ? pokemonData.sprites.front_default
-          : pokemonData.sprites.back_default;
+      pokemonImg.src = renderPokemonImage(
+        pokemonData,
+        pokemon.isShiny,
+        pokemon.sex,
+        pokemon.direction
+      );
     });
     const toggleShinyBtn = document.createElement("button");
     toggleShinyBtn.textContent = "Toggle Shiny";
     toggleShinyBtn.addEventListener("click", () => {
       pokemon.isShiny = !pokemon.isShiny;
-      pokemonImg.src = pokemon.isShiny
-        ? pokemonData.sprites.front_shiny
-        : pokemonData.sprites.front_default;
+      pokemonImg.src = renderPokemonImage(
+        pokemonData,
+        pokemon.isShiny,
+        pokemon.sex,
+        pokemon.direction
+      );
     });
-    pokemonCard.append(pokemonImg, pokemonNameEl, rotateDirection, toggleShinyBtn);
+    const swapGenderBtn = document.createElement("button");
+    swapGenderBtn.textContent = "Swap Gender";
+    swapGenderBtn.addEventListener("click", () => {
+      pokemon.sex = pokemon.sex === "male" ? "female" : "male";
+      pokemonImg.src = renderPokemonImage(
+        pokemonData,
+        pokemon.isShiny,
+        pokemon.sex,
+        pokemon.direction
+      );
+    });
+    pokemonCard.append(
+      pokemonImg,
+      pokemonNameEl,
+      rotateDirection,
+      toggleShinyBtn,
+      swapGenderBtn
+    );
     pokemonsContainer.append(pokemonCard);
   }
 };
