@@ -69,7 +69,15 @@ const buildPage = async (pokemons) => {
           ? pokemonData.sprites.front_default
           : pokemonData.sprites.back_default;
     });
-    pokemonCard.append(pokemonImg, pokemonNameEl, rotateDirection);
+    const toggleShinyBtn = document.createElement("button");
+    toggleShinyBtn.textContent = "Toggle Shiny";
+    toggleShinyBtn.addEventListener("click", () => {
+      pokemon.isShiny = !pokemon.isShiny;
+      pokemonImg.src = pokemon.isShiny
+        ? pokemonData.sprites.front_shiny
+        : pokemonData.sprites.front_default;
+    });
+    pokemonCard.append(pokemonImg, pokemonNameEl, rotateDirection, toggleShinyBtn);
     pokemonsContainer.append(pokemonCard);
   }
 };
