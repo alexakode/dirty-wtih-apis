@@ -1,18 +1,32 @@
 const pokemonsContainer = document.querySelector("#pokemons-container");
 const POKEMON_API_URL = "https://pokeapi.co/api/v2";
 let page = 1;
+let pokemonList = [];
 // Fetch pokemon service, specifying versioning may allow backwards compatability
+/* Store some states
+- isShiny: boolean
+- direction: string
+- sex: string
+*/
 const fetchPokemons = async (limit, offset) => {
   try {
     const response = await fetch(
       `${POKEMON_API_URL}/pokemon?limit=${limit}&offset=${offset}`
     );
     const jsonBody = await response.json();
-    return jsonBody.results;
+    return jsonBody.results.map((pokemon) => ({
+      ...pokemon,
+      name: pokemon.name,
+      url: pokemon.url,
+      isShiny: false,
+      direction: "front",
+      sex: "male",
+    }));
   } catch (err) {
     throw new Error("Failed to parse JSON response");
   }
 };
+// spread
 const fetchPokemon = async (url) => {
   const response = await fetch(url);
   const jsonBody = await response.json();
@@ -46,14 +60,24 @@ const buildPage = async (pokemons) => {
     pokemonImg.width = 100;
     const pokemonNameEl = document.createElement("h1");
     pokemonNameEl.textContent = pokemonData.name;
-    pokemonCard.append(pokemonImg, pokemonNameEl);
+    const rotateDirection = document.createElement("button");
+    rotateDirection.textContent = "Rotate Pokemon";
+    rotateDirection.addEventListener("click", () => {
+      pokemon.direction = pokemon.direction === "front" ? "back" : "front";
+      pokemonImg.src =
+        pokemon.direction === "front"
+          ? pokemonData.sprites.front_default
+          : pokemonData.sprites.back_default;
+    });
+    pokemonCard.append(pokemonImg, pokemonNameEl, rotateDirection);
     pokemonsContainer.append(pokemonCard);
   }
 };
 const renderPage = async () => {
   pokemonsContainer.innerHTML = "";
-  const pokemons = await fetchPokemons(10, (page - 1) * 10);
-  buildPage(pokemons);
+  pokemonList = await fetchPokemons(10, (page - 1) * 10);
+  // console.log(pokemonList);
+  await buildPage(pokemonList);
 };
 renderPage();
 document.body.append(previousPageButton(), nextPageButton());
