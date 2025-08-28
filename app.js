@@ -1,5 +1,6 @@
 const pokemonsContainer = document.querySelector("#pokemons-container");
 const POKEMON_API_URL = "https://pokeapi.co/api/v2";
+const FEMALE_GENDER_URL = "https://pokeapi.co/api/v2/gender/1"; // 1 = female
 let page = 1;
 let pokemonList = [];
 // Fetch pokemon service, specifying versioning may allow backwards compatability
@@ -31,6 +32,14 @@ const fetchPokemon = async (url) => {
   const response = await fetch(url);
   const jsonBody = await response.json();
   return jsonBody;
+};
+
+const isFemaleAvailable = async (pokemonName) => {
+  const response = await fetch(FEMALE_GENDER_URL);
+  const data = await response.json();
+  return data.pokemon_species_details.some(
+    (entry) => entry.pokemon_species.name === pokemonName.toLowerCase()
+  );
 };
 const nextPageButton = () => {
   const nextPageBtn = document.createElement("button");
@@ -118,7 +127,17 @@ const buildPage = async (pokemons) => {
         pokemon.sex,
         pokemon.direction
       );
-    });
+    }); // Check gender availability and disable if needed
+    const updateGenderButton = async () => {
+      const hasFemale = await isFemaleAvailable(pokemonData.species.name);
+      if (!hasFemale) {
+        swapGenderBtn.disabled = true;
+        swapGenderBtn.title = "This Pokémon has no female variant";
+        swapGenderBtn.style.opacity = "0.5";
+      }
+    };
+
+    updateGenderButton(); // Call this after creating the button
     pokemonCard.append(
       pokemonImg,
       pokemonNameEl,
