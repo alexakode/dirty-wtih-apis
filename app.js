@@ -51,7 +51,7 @@ const previousPageButton = () => {
   return previousPageBtn;
 };
 const renderPokemonImage = (pokemonObj, shiny, sex, direction) => {
-  let imageSource = undefined;
+  // let imageSource = undefined;
   // Determine the image source based on the shiny, sex, and direction
   if (sex === "male") {
     return shiny
@@ -64,11 +64,11 @@ const renderPokemonImage = (pokemonObj, shiny, sex, direction) => {
   } else {
     return shiny
       ? direction === "front"
-        ? pokemonObj.sprites.front_shiny
-        : pokemonObj.sprites.back_shiny
+        ? pokemonObj.sprites.front_shiny_female
+        : pokemonObj.sprites.back_shiny_female
       : direction === "front"
-      ? pokemonObj.sprites.front_default
-      : pokemonObj.sprites.back_default;
+      ? pokemonObj.sprites.front_female
+      : pokemonObj.sprites.back_female;
   }
   // const pokemonImg = document.createElement("img");
   // pokemonImg.src = imageSource;
