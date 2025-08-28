@@ -51,8 +51,9 @@ const previousPageButton = () => {
   return previousPageBtn;
 };
 const renderPage = async () => {
+  pokemonsContainer.innerHTML = "";
   const pokemons = await fetchPokemons(10, (page - 1) * 10);
   buildPage(pokemons);
 };
-
 renderPage();
+document.body.append(previousPageButton(), nextPageButton());
