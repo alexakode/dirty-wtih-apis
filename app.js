@@ -37,6 +37,7 @@ const fetchPokemon = async (url) => {
 const isFemaleAvailable = async (pokemonName) => {
   const response = await fetch(FEMALE_GENDER_URL);
   const data = await response.json();
+  console.log("Female species list:", data.pokemon_species_details.map(entry => entry.pokemon_species.name));
   return data.pokemon_species_details.some(
     (entry) => entry.pokemon_species.name === pokemonName.toLowerCase()
   );
@@ -128,16 +129,21 @@ const buildPage = async (pokemons) => {
         pokemon.direction
       );
     }); // Check gender availability and disable if needed
-    const updateGenderButton = async () => {
-      const hasFemale = await isFemaleAvailable(pokemonData.species.name);
-      if (!hasFemale) {
-        swapGenderBtn.disabled = true;
-        swapGenderBtn.title = "This Pokémon has no female variant";
-        swapGenderBtn.style.opacity = "0.5";
-      }
-    };
+    // const updateGenderButton = async () => {
+    console.log("Checking female availability for:", pokemonData.species.name);
+    const hasFemale = await isFemaleAvailable(pokemonData.species.name);
+    if (!hasFemale) {
+      swapGenderBtn.disabled = true;
+      swapGenderBtn.title = "This Pokémon has no female variant";
+      swapGenderBtn.style.opacity = "0.5";
+    } else {
+      swapGenderBtn.disabled = false;
+      swapGenderBtn.title = "Swap gender";
+      swapGenderBtn.style.opacity = "1";
+    }
+    // };
 
-    updateGenderButton(); // Call this after creating the button
+    // updateGenderButton(); // Call this after creating the button
     pokemonCard.append(
       pokemonImg,
       pokemonNameEl,
